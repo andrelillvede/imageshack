@@ -76,8 +76,17 @@ Imageshack = function(username, password, api_key) {
 		return HTTP.get(url, {params: params})
 	}
 
-
-	this.upload = function(buffer){
+	/*
+	- file(s[])@: Image binary(s). May send multiple images. Use ‘files[]’ array param when sending multiple images.
+	- album: Album title or album id to attach files to. If album exists files will be added. If not a new album will be created.
+	- title(s[]): Set a title for the image. Use ‘titles[]’ array param or ‘titles’ param separated by commas for multiple image titles.
+	- description(s[]): Set a description for the image. Use descriptions[]’ array param or descriptions param separated by commas for multiple image descriptions.
+	- tags: List of tags to attach to the image. Array or csv
+	- public: Sets public setting. Default is true.
+	- filter: User specified image filter 0-23. 0 is no filter. Will be applied images transloaded.
+	- comments_disabled: Disable comments for the specific image
+	*/
+	this.upload = function(buffer, params){
 		return post('https://api.imageshack.com/v2/images', {
 			name: 'file@',
 			value: buffer,
