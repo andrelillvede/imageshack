@@ -49,7 +49,7 @@ Imageshack = function(username, password, api_key) {
 
 			res.on('end', function(){
 				try{
-					fut.return(JSON.parse(body))
+					fut.return(JSON.parse(body).result)
 				}catch(e){
 					fut.throw(e);
 				}
@@ -73,26 +73,41 @@ Imageshack = function(username, password, api_key) {
 			params.auth_token = auth_token;
 		}
 
-		return HTTP.get(url, {params: params})
+		return JSON.parse(HTTP.get(url, {params: params}).content).result
 	}
 
 	/*
-	- file(s[])@: Image binary(s). May send multiple images. Use ‘files[]’ array param when sending multiple images.
+
 	- album: Album title or album id to attach files to. If album exists files will be added. If not a new album will be created.
-	- title(s[]): Set a title for the image. Use ‘titles[]’ array param or ‘titles’ param separated by commas for multiple image titles.
-	- description(s[]): Set a description for the image. Use descriptions[]’ array param or descriptions param separated by commas for multiple image descriptions.
+	- title: Set a title for the image. Use ‘titles[]’ array param or ‘titles’ param separated by commas for multiple image titles.
+	- description: Set a description for the image. Use descriptions[]’ array param or descriptions param separated by commas for multiple image descriptions.
 	- tags: List of tags to attach to the image. Array or csv
 	- public: Sets public setting. Default is true.
 	- filter: User specified image filter 0-23. 0 is no filter. Will be applied images transloaded.
 	- comments_disabled: Disable comments for the specific image
 	*/
-	this.upload = function(buffer, params){
-		return post('https://api.imageshack.com/v2/images', {
-			name: 'file@',
-			value: buffer,
-			options: {filename: '1.jpeg', contentType: 'application/octet-stream'}
-		});
+	this.upload = function(filename, buffer, options){
+        var params = [{
+            name: 'file@',
+            value: buffer,
+            options: {filename: filename, contentType: 'application/octet-stream'}
+        }];
+
+        if(options){
+            Object.keys(options).forEach(function(key){
+               params.push({
+                   name: key,
+                   value: options[key],
+               })
+            })
+        }
+		return post('https://api.imageshack.com/v2/images', params);
 	}
+
+
+    this.getUserImages = function(username, params){
+        return get('https://api.imageshack.com/v2/user/' + username + '/images', params)
+    }
 
 	/*
 
@@ -106,6 +121,7 @@ Imageshack = function(username, password, api_key) {
 	this.getUserSettings = function(username, params){
 		return get('https://api.imageshack.com/v2/user/settings', params, true);
 	}
+
 
 }
 
