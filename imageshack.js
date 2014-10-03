@@ -33,8 +33,6 @@ Imageshack = function (username, password, api_key) {
 		var fut = new Future();
 
 		form.submit(url, function (err, res) {
-			console.log('STATUS: ' + res.statusCode);
-			console.log('HEADERS: ' + JSON.stringify(res.headers));
 
 			var body = "";
 
@@ -101,7 +99,7 @@ Imageshack = function (username, password, api_key) {
 			Object.keys(options).forEach(function (key) {
 				params.push({
 					name: key,
-					value: options[key],
+					value: options[key]
 				})
 			})
 		}
@@ -121,6 +119,7 @@ Imageshack = function (username, password, api_key) {
 	 *      - comments_disabled: Disable comments for the specific image
 	 */
 	this.transloadImages = function (urls, options) {
+
 		var params = [{
 			name: 'urls',
 			value: urls
@@ -130,7 +129,7 @@ Imageshack = function (username, password, api_key) {
 			Object.keys(options).forEach(function (key) {
 				params.push({
 					name: key,
-					value: options[key],
+					value: options[key]
 				})
 			})
 		}
@@ -144,7 +143,6 @@ Imageshack = function (username, password, api_key) {
 	 *      - next_prev_limit: Sets the limit of next and previous images returned. Default is 2
 	 *      - related_images_limit: Sets the limit of related images to be returned. Default is 10
 	 */
-
 	this.getImage = function (id, options) {
 		return httpCall('GET', 'https://api.imageshack.com/v2/images/' + id, options, true)
 	}
@@ -163,6 +161,7 @@ Imageshack = function (username, password, api_key) {
 	}
 
 	/**
+	 * Update image
 	 * id: image id
 	 * options:
 	 *     - title: Set a title for the image
@@ -178,6 +177,7 @@ Imageshack = function (username, password, api_key) {
 	}
 
 	/**
+	 * Update multiple images
 	 * ids: string with image ids, csv
 	 * options:
 	 *     - title: Set a title for the image
@@ -194,6 +194,7 @@ Imageshack = function (username, password, api_key) {
 	}
 
 	/**
+	 * Delete image
 	 * id: image id of image to delete
 	 */
 	this.deleteImage = function(id){
@@ -201,9 +202,10 @@ Imageshack = function (username, password, api_key) {
 	}
 
 	/**
+	 * Delete multiple images
 	 * ids: string with ids of images to delete, csv
 	 */
-	this.deleteImage = function(ids){
+	this.deleteMultipleImages = function(ids){
 		return httpCall('DELETE', 'https://api.imageshack.com/v2/images', {ids: ids}, true)
 	}
 
